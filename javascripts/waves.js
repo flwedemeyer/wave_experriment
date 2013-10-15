@@ -53,7 +53,7 @@
 				tweets = [];
 				bubbles = [];
 				
-				$("body").append('<div id="tweet"></div>');
+				// $("body").append('<div id="tweet"></div>');
 				
 				// Generate our wave particles
 				for( var i = 0; i < DETAIL+1; i++ ) {
@@ -73,11 +73,11 @@
 				$(window).resize(ResizeCanvas);
 				
 				timeUpdateInterval = setInterval( TimeUpdate, 40 );
-				tweetUpdateInterval = setInterval( CreateBubble, TWEETS_FREQUENCY );
+				// tweetUpdateInterval = setInterval( CreateBubble, TWEETS_FREQUENCY );
 				twitchInterval = setInterval( Twitch, TWITCH_INTERVAL );
 				
-				DownloadTweets();
-				CreateBubble();
+				// DownloadTweets();
+				// CreateBubble();
 				ResizeCanvas();
 				
 			}
@@ -98,68 +98,68 @@
 		//  * less than five tweets remaining, download a
 		//  * new batch.
 		 
-		function GetTweet() {
-			if( tweets.length < 5 && !isDownloadingTweets ) {
-				DownloadTweets();
-			}
+		// function GetTweet() {
+		// 	if( tweets.length < 5 && !isDownloadingTweets ) {
+		// 		DownloadTweets();
+		// 	}
 			
-			if (tweets.length > 0) {
-				return tweets.shift();
-			}
-		}
+		// 	if (tweets.length > 0) {
+		// 		return tweets.shift();
+		// 	}
+		// }
 		
 		/**
 		 * 
 		 */
-		function DownloadTweets() {
-			isDownloadingTweets = true;
+		// function DownloadTweets() {
+		// 	isDownloadingTweets = true;
 			
-			if( twitterPolls ++ > 20 ) {
-				Terminate( "That's it. No more tweets for you." );
-			}
+		// 	if( twitterPolls ++ > 20 ) {
+		// 		Terminate( "That's it. No more tweets for you." );
+		// 	}
 			
-			$.post("search.php", {query: TWITTER_QUERY, max_id: twitterMaxId, rpp: TWEETS_PER_PAGE}, function(xml){
+		// 	$.post("search.php", {query: TWITTER_QUERY, max_id: twitterMaxId, rpp: TWEETS_PER_PAGE}, function(xml){
 				
-				if( !$('entry',xml) || $('entry',xml).length == 0 ) {
-					if (twitterRetries++ > 3) {
-						Terminate("Oops, Twitter doesn't want to serve us at the moment.");
-					}
-				}
+		// 		if( !$('entry',xml) || $('entry',xml).length == 0 ) {
+		// 			if (twitterRetries++ > 3) {
+		// 				Terminate("Oops, Twitter doesn't want to serve us at the moment.");
+		// 			}
+		// 		}
 				
-				$('entry',xml).each(function(i){
-					var tweet = {};
-					tweet.title = $(this).find("title").text();   
-					tweet.content = $(this).find("content").text();   
-					tweet.published = $(this).find("published").text();   
-					tweet.link = $(this).find("link").text();   
-					tweet.authorURI = $(this).find("uri").text();
-					tweet.author = $(this).find("name").text();
-					tweet.author = "@" + tweet.author.slice(0, tweet.author.indexOf(" "));
-					tweet.id = $(this).find("id").text();
-					tweet.id = tweet.id.slice( tweet.id.lastIndexOf(":") + 1 );
+		// 		$('entry',xml).each(function(i){
+		// 			var tweet = {};
+		// 			tweet.title = $(this).find("title").text();   
+		// 			tweet.content = $(this).find("content").text();   
+		// 			tweet.published = $(this).find("published").text();   
+		// 			tweet.link = $(this).find("link").text();   
+		// 			tweet.authorURI = $(this).find("uri").text();
+		// 			tweet.author = $(this).find("name").text();
+		// 			tweet.author = "@" + tweet.author.slice(0, tweet.author.indexOf(" "));
+		// 			tweet.id = $(this).find("id").text();
+		// 			tweet.id = tweet.id.slice( tweet.id.lastIndexOf(":") + 1 );
 					
-					if( i == $('entry',xml).length - 1 ) {
-						twitterMaxId = parseInt( tweet.id ) - 1;
-					}
+		// 			if( i == $('entry',xml).length - 1 ) {
+		// 				twitterMaxId = parseInt( tweet.id ) - 1;
+		// 			}
 					
-					tweets.push( tweet );
-				});
+		// 			tweets.push( tweet );
+		// 		});
 				
-				isDownloadingTweets = false;
+		// 		isDownloadingTweets = false;
 				
-			});
-		}
+		// 	});
+		// }
 		
 		/**
 		 * 
 		 */
-		function ShowTweet( bubbleIndex ) {
-			var tweet = GetTweet();
-			var tweetMarkup = tweet.content + "<br/><p class='author'>by: <a href='"+tweet.authorURI+"'>" + tweet.author + "</p>";
-			$("#tweet").hide().html( tweetMarkup ).fadeIn();
+		// function ShowTweet( bubbleIndex ) {
+		// 	var tweet = GetTweet();
+		// 	var tweetMarkup = tweet.content + "<br/><p class='author'>by: <a href='"+tweet.authorURI+"'>" + tweet.author + "</p>";
+		// 	$("#tweet").hide().html( tweetMarkup ).fadeIn();
 			
-			DissolveBubble( bubbleIndex );
-		}
+		// 	DissolveBubble( bubbleIndex );
+		// }
 		
 		/**
 		 * Inserts a random impulse to keep the wave moving.
@@ -272,36 +272,36 @@
 				b.velocity.x = b.velocity.x < 0 ? Math.min( b.velocity.x, -.8/b.mass ) : Math.max( b.velocity.x, .8/b.mass )
 				b.x += b.velocity.x;
 				
-				if( d < AOE ) {
-					// The bubble is within the AOE, apply horizontal mouse pull relative to distance
-					//b.velocity.x += MOUSE_PULL * ( ( AOE - d ) / AOE * b.mass ) * ms.x;
-				}
+				// if( d < AOE ) {
+				// 	// The bubble is within the AOE, apply horizontal mouse pull relative to distance
+				// 	//b.velocity.x += MOUSE_PULL * ( ( AOE - d ) / AOE * b.mass ) * ms.x;
+				// }
 				
-				if( b.dissolved == false ) {
-					context.moveTo(b.x,b.y);
-					context.arc(b.x,b.y,b.currentSize,0,Math.PI*2,true);
-				}
-				else {
-					b.velocity.x /= 1.15;
-					b.velocity.y /= 1.05;
+				// if( b.dissolved == false ) {
+				// 	context.moveTo(b.x,b.y);
+				// 	context.arc(b.x,b.y,b.currentSize,0,Math.PI*2,true);
+				// }
+				// else {
+				// 	b.velocity.x /= 1.15;
+				// 	b.velocity.y /= 1.05;
 					
-					while( b.children.length < b.dissolveSize ) {
-						b.children.push( { x:0, y:0, size: Math.random()*b.dissolveSize, velocity: { x: (Math.random()*20)-10, y: -(Math.random()*10) } } );
-					}
+				// 	while( b.children.length < b.dissolveSize ) {
+				// 		b.children.push( { x:0, y:0, size: Math.random()*b.dissolveSize, velocity: { x: (Math.random()*20)-10, y: -(Math.random()*10) } } );
+				// 	}
 					
-					for( var j = 0; j < b.children.length; j++ ) {
-						var c = b.children[j];
-						c.x += c.velocity.x;
-						c.y += c.velocity.y;
-						c.velocity.x /= 1.1;
-						c.velocity.y += 0.4;
-						c.size /= 1.1;
+				// 	for( var j = 0; j < b.children.length; j++ ) {
+				// 		var c = b.children[j];
+				// 		c.x += c.velocity.x;
+				// 		c.y += c.velocity.y;
+				// 		c.velocity.x /= 1.1;
+				// 		c.velocity.y += 0.4;
+				// 		c.size /= 1.1;
 						
-						context.moveTo(b.x+c.x,b.y+c.y); // needed in ff
-						context.arc(b.x+c.x,b.y+c.y,c.size,0,Math.PI*2,true);
-					}
+				// 		context.moveTo(b.x+c.x,b.y+c.y); // needed in ff
+				// 		context.arc(b.x+c.x,b.y+c.y,c.size,0,Math.PI*2,true);
+				// 	}
 					
-				}
+				// }
 				
 			}
 			
@@ -333,46 +333,46 @@
 		/**
 		 * 
 		 */
-		function CreateBubble() {
-			if( bubbles.length > MAX_BUBBLES ) {
-				var i = 0;
+		// function CreateBubble() {
+		// 	if( bubbles.length > MAX_BUBBLES ) {
+		// 		var i = 0;
 				
-				if( bubbles[i].dissolved ) {
-					// Find a bubble thats not already on its way to dissolving
-					for( ; i < bubbles.length; i++ ) {
-						if( bubbles[i].dissolved == false ) {
-							bubbles[i].dissolveSize = SMALL_BUBBLE_DISSOLVE;
-							DissolveBubble( i );
-							break;
-						}
-					}
-				}
-				else {
-					DissolveBubble( i );
-				}
+		// 		if( bubbles[i].dissolved ) {
+		// 			// Find a bubble thats not already on its way to dissolving
+		// 			for( ; i < bubbles.length; i++ ) {
+		// 				if( bubbles[i].dissolved == false ) {
+		// 					bubbles[i].dissolveSize = SMALL_BUBBLE_DISSOLVE;
+		// 					DissolveBubble( i );
+		// 					break;
+		// 				}
+		// 			}
+		// 		}
+		// 		else {
+		// 			DissolveBubble( i );
+		// 		}
 				
-			}
+		// 	}
 			
-			var minSize = 15;
-			var maxSize = 30;
-			var size = minSize + Math.random() * ( maxSize - minSize );
-			var catapult = 30;
+		// 	var minSize = 15;
+		// 	var maxSize = 30;
+		// 	var size = minSize + Math.random() * ( maxSize - minSize );
+		// 	var catapult = 30;
 			
-			var b = {
-				x: maxSize + ( Math.random() * ( WIDTH - maxSize ) ),
-				y: HEIGHT - maxSize,
-				velocity: {x: (Math.random()*catapult)-catapult/2,y: 0},
-				size: size,
-				mass: (size / maxSize)+1,
-				dissolved: false,
-				dissolveSize: BIG_BUBBLE_DISSOLVE,
-				children: []
-			};
+		// 	var b = {
+		// 		x: maxSize + ( Math.random() * ( WIDTH - maxSize ) ),
+		// 		y: HEIGHT - maxSize,
+		// 		velocity: {x: (Math.random()*catapult)-catapult/2,y: 0},
+		// 		size: size,
+		// 		mass: (size / maxSize)+1,
+		// 		dissolved: false,
+		// 		dissolveSize: BIG_BUBBLE_DISSOLVE,
+		// 		children: []
+		// 	};
 			
-			b.currentSize = b.size;
+		// 	b.currentSize = b.size;
 			
-			bubbles.push(b);
-		}
+		// 	bubbles.push(b);
+		// }
 		function DissolveBubble( index ) {
 			var b = bubbles[index];
 			
